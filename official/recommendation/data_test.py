@@ -36,6 +36,7 @@ NUM_USERS = 1000
 NUM_ITEMS = 2000
 NUM_PTS = 50000
 BATCH_SIZE = 2048
+EVAL_BATCH_SIZE = 4000
 NUM_NEG = 4
 
 
@@ -79,6 +80,8 @@ class BaseTest(tf.test.TestCase):
 
     movielens.download = mock_download
     movielens.NUM_RATINGS[DATASET] = NUM_PTS
+    data_preprocessing.DATASET_TO_NUM_USERS_AND_ITEMS[DATASET] = (NUM_USERS,
+                                                                  NUM_ITEMS)
 
   def test_preprocessing(self):
     # For the most part the necessary checks are performed within
@@ -112,8 +115,8 @@ class BaseTest(tf.test.TestCase):
   def test_end_to_end(self):
     ncf_dataset, _ = data_preprocessing.instantiate_pipeline(
         dataset=DATASET, data_dir=self.temp_data_dir,
-        batch_size=BATCH_SIZE, eval_batch_size=BATCH_SIZE, num_data_readers=2,
-        num_neg=NUM_NEG)
+        batch_size=BATCH_SIZE, eval_batch_size=EVAL_BATCH_SIZE,
+        num_data_readers=2, num_neg=NUM_NEG)
 
     g = tf.Graph()
     with g.as_default():
